@@ -75,7 +75,21 @@ export default class SMT {
      * @returns True if the proof is valid, false otherwise.
      */
     verifyProof(merkleProof: MerkleProof): boolean;
+    /**
+     * It enables the conversion of the full tree structure into a JSON string,
+     * facilitating future imports of the tree. This approach is beneficial for
+     * sharing across networks, as it saves time by storing root and the map of
+     * hashed nodes directly instead of recomputing them
+     * @returns The stringified JSON of the tree.
+     */
     export(): string;
+    /**
+     * It imports an entire tree by initializing the nodes and root without calculating
+     * any hashes. Note that it is crucial to ensure the integrity of the tree
+     * before or after importing it.
+     * The tree must be empty before importing.
+     * @param nodes The stringified JSON of the tree.
+     */
     import(json: string): void;
     /**
      * Searches for an entry in the tree. If the key passed as parameter exists in

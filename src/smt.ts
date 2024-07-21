@@ -273,7 +273,14 @@ export default class SMT {
         return false
     }
 
-    export():string {
+    /**
+     * It enables the conversion of the full tree structure into a JSON string,
+     * facilitating future imports of the tree. This approach is beneficial for
+     * sharing across networks, as it saves time by storing root and the map of 
+     * hashed nodes directly instead of recomputing them
+     * @returns The stringified JSON of the tree.
+     */
+    export(): string {
         const obj: { [key: string]: string[] } = {};
         obj["root"] = [this.root.toString()];
         this.nodes.forEach((value, key) => {
@@ -283,17 +290,32 @@ export default class SMT {
         return JSON.stringify(obj, null, 2);
     }
 
-    import(json: string):void {
+    /**
+     * It imports an entire tree by initializing the nodes and root without calculating
+     * any hashes. Note that it is crucial to ensure the integrity of the tree
+     * before or after importing it.
+     * The tree must be empty before importing.
+     * @param nodes The stringified JSON of the tree.
+     */
+    import(json: string) {
         const obj = JSON.parse(json);
         const map = new Map<Node, ChildNodes>();
 
         for (const [key, value] of Object.entries(obj)) {
             if (key === "root") {
-                this.root = BigInt((value as string[])[0]);
+                if(this.bigNumbers){
+                    this.root = BigInt((value as string[])[0]);
+                } else {
+                    this.root = (value as string[])[0];
+                }
             } else {
-                const bigintKey = BigInt(key);
-                const bigintArray = (value as string[]).map(v => BigInt(v));
-                map.set(bigintKey, bigintArray);
+                const Key = this.bigNumbers ? BigInt(key) : key;
+                if (this.bigNumbers) {
+                    const Children = (value as string[]).map(v => BigInt(v));
+                    map.set(Key, Children);
+                } else {
+                    map.set(Key, value as string[]);
+                }
             }
         }
 
