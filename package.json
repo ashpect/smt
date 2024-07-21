@@ -1,5 +1,5 @@
 {
-    "name": "@zk-kit/smt",
+    "name": "@ashpect/smt",
     "version": "1.0.0",
     "description": "Sparse Merkle tree implementation in TypeScript.",
     "type": "module",
