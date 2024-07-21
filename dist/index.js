@@ -285,6 +285,23 @@ class SMT {
         }
         return false;
     }
+    export() {
+        const obj = {};
+        this.nodes.forEach((value, key) => {
+            obj[key.toString()] = value.map(v => v.toString());
+        });
+        return JSON.stringify(obj, null, 2);
+    }
+    import(json) {
+        const obj = JSON.parse(json);
+        const map = new Map();
+        for (const [key, value] of Object.entries(obj)) {
+            const bigintKey = BigInt(key);
+            const bigintArray = value.map(v => BigInt(v));
+            map.set(bigintKey, bigintArray);
+        }
+        this.nodes = map;
+    }
     /**
      * Searches for an entry in the tree. If the key passed as parameter exists in
      * the tree, the function returns the entry, otherwise it returns the entry

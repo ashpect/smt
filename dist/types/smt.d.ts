@@ -75,6 +75,8 @@ export default class SMT {
      * @returns True if the proof is valid, false otherwise.
      */
     verifyProof(merkleProof: MerkleProof): boolean;
+    export(): string;
+    import(json: string): void;
     /**
      * Searches for an entry in the tree. If the key passed as parameter exists in
      * the tree, the function returns the entry, otherwise it returns the entry
