@@ -289,6 +289,7 @@ class SMT {
     }
     export() {
         const obj = {};
+        obj["root"] = [this.root.toString()];
         this.nodes.forEach((value, key) => {
             obj[key.toString()] = value.map(v => v.toString());
         });
@@ -298,9 +299,14 @@ class SMT {
         const obj = JSON.parse(json);
         const map = new Map();
         for (const [key, value] of Object.entries(obj)) {
-            const bigintKey = BigInt(key);
-            const bigintArray = value.map(v => BigInt(v));
-            map.set(bigintKey, bigintArray);
+            if (key === "root") {
+                this.root = BigInt(value[0]);
+            }
+            else {
+                const bigintKey = BigInt(key);
+                const bigintArray = value.map(v => BigInt(v));
+                map.set(bigintKey, bigintArray);
+            }
         }
         this.nodes = map;
     }

@@ -275,11 +275,11 @@ export default class SMT {
 
     export():string {
         const obj: { [key: string]: string[] } = {};
-
+        obj["root"] = [this.root.toString()];
         this.nodes.forEach((value, key) => {
             obj[key.toString()] = value.map(v => v.toString());
         });
-        
+
         return JSON.stringify(obj, null, 2);
     }
 
@@ -288,13 +288,17 @@ export default class SMT {
         const map = new Map<Node, ChildNodes>();
 
         for (const [key, value] of Object.entries(obj)) {
-          const bigintKey = BigInt(key);
-          const bigintArray = (value as string[]).map(v => BigInt(v));
-          map.set(bigintKey, bigintArray);
+            if (key === "root") {
+                this.root = BigInt((value as string[])[0]);
+            } else {
+                const bigintKey = BigInt(key);
+                const bigintArray = (value as string[]).map(v => BigInt(v));
+                map.set(bigintKey, bigintArray);
+            }
         }
 
         this.nodes = map;
-      }
+    }
 
     /**
      * Searches for an entry in the tree. If the key passed as parameter exists in
